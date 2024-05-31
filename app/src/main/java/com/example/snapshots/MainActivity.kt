@@ -1,11 +1,8 @@
 package com.example.snapshots
 
-import android.app.Activity
 import android.os.Bundle
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import com.example.snapshots.databinding.ActivityMainBinding
@@ -56,5 +53,25 @@ class MainActivity : AppCompatActivity() {
             homeFragment, HomeFragment::class.java.name)
             .commit()
 
+        mBinding.bottomNav.setOnNavigationItemSelectedListener {
+            when(it.itemId){
+                R.id.action_home -> {
+                    mFragmentManager.beginTransaction().hide(mActiveFragment).show(homeFragment).commit()
+                    mActiveFragment = homeFragment
+                    true
+                }
+                R.id.action_add -> {
+                    mFragmentManager.beginTransaction().hide(mActiveFragment).show(addFragment).commit()
+                    mActiveFragment = addFragment
+                    true
+                }
+                R.id.action_profile -> {
+                    mFragmentManager.beginTransaction().hide(mActiveFragment).show(profileFragment).commit()
+                    mActiveFragment = profileFragment
+                    true
+                }
+                else -> false
+            }
+        }
     }
 }
