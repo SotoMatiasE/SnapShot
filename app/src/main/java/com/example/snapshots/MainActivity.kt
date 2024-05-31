@@ -8,7 +8,7 @@ import androidx.fragment.app.FragmentManager
 import com.example.snapshots.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity() {
-    private lateinit var mBinding : ActivityMainBinding
+    private lateinit var mBinding: ActivityMainBinding
 
     private lateinit var mActiveFragment: Fragment
     private lateinit var mFragmentManager: FragmentManager
@@ -53,8 +53,8 @@ class MainActivity : AppCompatActivity() {
             homeFragment, HomeFragment::class.java.name)
             .commit()
 
-        mBinding.bottomNav.setOnNavigationItemSelectedListener {
-            when(it.itemId){
+        mBinding.bottomNav.setOnItemSelectedListener {
+            when (it.itemId) {
                 R.id.action_home -> {
                     mFragmentManager.beginTransaction().hide(mActiveFragment).show(homeFragment).commit()
                     mActiveFragment = homeFragment
