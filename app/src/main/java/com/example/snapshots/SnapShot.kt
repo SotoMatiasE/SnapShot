@@ -6,5 +6,5 @@ import com.google.firebase.database.IgnoreExtraProperties
 @IgnoreExtraProperties //anotacion
 data class SnapShot(var id: String = "",
                     var title: String = "",
-                    var photoURL: String = "",
+                    var photoUrl: String = "",
                     var likeList: Map<String, Boolean> = mapOf())

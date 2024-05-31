@@ -7,6 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
@@ -20,6 +21,7 @@ import com.google.firebase.database.FirebaseDatabase
 class HomeFragment : Fragment() {
     private lateinit var mBinding : FragmentHomeBinding
     private lateinit var mFirebaseAdapter: FirebaseRecyclerAdapter<SnapShot, SnapshotHolder>
+    private lateinit var mLayoutManager: RecyclerView.LayoutManager
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -32,7 +34,7 @@ class HomeFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        //comienzo de configuracion del adaptador
+        //comienzo de configuracion del adaptador, tambien se hace referencia a la db de firebase .child("snapshots")
         val query = FirebaseDatabase.getInstance().reference.child("snapshots")
 
         val options = FirebaseRecyclerOptions.
@@ -60,9 +62,9 @@ class HomeFragment : Fragment() {
                     binding.tvTitle.text  = snapshot.title
 
                     Glide.with(mContext)
-                        .load(snapshot.photoURL)
-                        .centerCrop()
+                        .load(snapshot.photoUrl)
                         .diskCacheStrategy(DiskCacheStrategy.ALL)
+                        .centerCrop()
                         .into(binding.imgPhoto)
                 }
             }
@@ -78,6 +80,27 @@ class HomeFragment : Fragment() {
                 Toast.makeText(mContext, error.message, Toast.LENGTH_SHORT).show()
             }
         }
+
+        //Configurar el recycler view para ver los datos
+        mLayoutManager = LinearLayoutManager(context)
+        //Configurar recycler view
+        mBinding.recyclerview.apply {
+            setHasFixedSize(true)
+            layoutManager = mLayoutManager
+            adapter = mFirebaseAdapter
+        }
+    }
+
+    //indicamos cuando es que va a comenzar a consumir los datos
+    override fun onStart() {
+        super.onStart()
+        mFirebaseAdapter.startListening()
+    }
+
+    //liberamos onStart
+    override fun onStop() {
+        super.onStop()
+        mFirebaseAdapter.stopListening()
     }
 
     inner class SnapshotHolder(view: View) : RecyclerView.ViewHolder(view){
